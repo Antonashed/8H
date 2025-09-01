@@ -1,9 +1,12 @@
 .venv/
 .pylintrc
 __pycache__/
+EightH/settings.py
+EightH/urls.py
 
 .idea
 .env
 
 db.sqlite3
 media/
+products/
