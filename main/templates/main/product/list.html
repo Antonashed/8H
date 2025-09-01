@@ -1,7 +1,60 @@
-{% extends "main/base.html" %}
+{% extends "base.html" %}
 
-{% block title %}Заголовок{% endblock title %}
+{% block title %}
+    {% if category %}{{ category.name }}{% else %}Товары{% endif %}
+{% endblock %}
 
 {% block content %}
-    контент страницы
-{% endblock content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>
+        {% if category %}
+            {{ category.name }}
+        {% else %}
+            Все товары
+        {% endif %}
+    </h1>
+
+    <!-- Сортировка -->
+    <div class="dropdown">
+        <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                data-bs-toggle="dropdown" aria-expanded="false">
+            Сортировка
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <li><a class="dropdown-item" href="?sort=name">По названию (А-Я)</a></li>
+            <li><a class="dropdown-item" href="?sort=-name">По названию (Я-А)</a></li>
+            <li><a class="dropdown-item" href="?sort=price">По цене (дешёвые)</a></li>
+            <li><a class="dropdown-item" href="?sort=-price">По цене (дорогие)</a></li>
+        </ul>
+    </div>
+</div>
+
+<!-- Список товаров -->
+{% if not products %}
+    <div class="alert alert-info">Товары в этой категории отсутствуют</div>
+{% else %}
+    <div class="row">
+        {% for product in products %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                {% if product.image %}
+                <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+                {% else %}
+                <img src="https://via.placeholder.com/300x200?text=No+Image" class="card-img-top" alt="no image">
+                {% endif %}
+
+                <div class="card-body">
+                    <h5 class="card-title">{{ product.name }}</h5>
+                    <p class="card-text">{{ product.description|truncatewords:15 }}</p>
+                    <p class="fw-bold">{{ product.price }} ₽</p>
+                </div>
+
+                <div class="card-footer bg-white">
+                    <a href="{{ product.get_absolute_url }}" class="btn btn-primary w-100">Подробнее</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% endif %}
+{% endblock %}
